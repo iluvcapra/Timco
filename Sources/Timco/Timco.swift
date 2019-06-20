@@ -5,6 +5,9 @@ enum TimecodeFrameCountMode {
     case Count25
     case Count30
     case Count30Drop
+    case Count48
+    case Count60
+    case Count60Drop
     
     var integralFPS : Int {
         switch self {
@@ -12,12 +15,16 @@ enum TimecodeFrameCountMode {
         case .Count25: return 25
         case .Count30, .Count30Drop:
             return 30
+        case .Count48: return 48
+        case .Count60: return 60
+        case .Count60Drop:
+            return 60
         }
     }
     
     var dropFrame : Bool {
         switch self {
-        case .Count30Drop:
+        case .Count30Drop, .Count60Drop:
             return true
         default:
             return false
@@ -33,15 +40,16 @@ struct TimecodeRep  {
     let frames : Int
     
     static func dropFrameCount(_ fcm: TimecodeFrameCountMode, _ absoluteFrameCount: FrameCount) -> FrameCount {
-        precondition(fcm.integralFPS == 30)
-        let framesPerMinute = 30 * 60
+        precondition(fcm.integralFPS == 30 || fcm.integralFPS == 60)
+        let framesPerMinute = fcm.integralFPS * 60
+        let dropFrames = fcm.integralFPS == 30 ? 2 : 4
         
         let (mins, _) = absoluteFrameCount
             .quotientAndRemainder(dividingBy: framesPerMinute)
         
         let (tenMins, _) = mins.quotientAndRemainder(dividingBy: 10)
         
-        return (mins * 2) - (tenMins * 2)
+        return (mins * dropFrames) - (tenMins * dropFrames)
     }
     
     static func modulateFrameCount(_ correctedFrameCount: FrameCount,
@@ -89,8 +97,12 @@ struct TimecodeRep  {
             return true
         }
         
-        if minutes % 10 != 0 && seconds == 0 && (frames == 0 || frames == 1) {
-            return false
+        if minutes % 10 != 0 && seconds == 0 {
+            if fcm.integralFPS == 30 && [0,1].contains(frames) {
+                return false
+            } else if fcm.integralFPS == 60 && [0,1,2,3].contains(frames) {
+                return false
+            }
         }
 
         return true
