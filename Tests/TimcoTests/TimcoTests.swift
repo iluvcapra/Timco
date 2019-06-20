@@ -27,22 +27,22 @@ final class TimcoTests: XCTestCase {
     }
     
     func testStringRep() {
-        let r = TimecodeRep(hours: 4, minutes: 12, seconds: 53, frames: 19)
+        let r = TimecodeRep(hours: 4, minutes: 12, seconds: 53, frames: 19, dropMark: false)
         XCTAssertEqual(r.description, "04:12:53:19")
     }
     
     func testStringRepToFrameCount() {
-        let r1 = TimecodeRep(hours: 0, minutes: 13, seconds: 9, frames: 1)
+        let r1 = TimecodeRep(hours: 0, minutes: 13, seconds: 9, frames: 1, dropMark: false)
         let frames1 = r1.frameCount(fcm: .Count24)
         XCTAssertEqual(frames1, 18_937)
         
-        let r2 = TimecodeRep(hours: 0, minutes: 1, seconds: 0, frames: 2)
+        let r2 = TimecodeRep(hours: 0, minutes: 1, seconds: 0, frames: 2, dropMark: true)
         let frames2 = r2.frameCount(fcm: .Count30Drop)
         XCTAssertEqual(frames2, 1800)
     }
     
     func testValidation() {
-        let r1 = TimecodeRep(hours: 1, minutes: 0, seconds: 0, frames: 0)
+        let r1 = TimecodeRep(hours: 1, minutes: 0, seconds: 0, frames: 0, dropMark: true)
         XCTAssertTrue(r1.valid(for: .Count30Drop))
     }
     
