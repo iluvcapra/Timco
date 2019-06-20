@@ -45,7 +45,7 @@ struct TimecodeRep  {
     }
     
     static func modulateFrameCount(_ correctedFrameCount: FrameCount,
-                                   _ fcm: TimecodeFrameCountMode) -> (Int, Int, Int, Int) {
+                                   _ fcm: TimecodeFrameCountMode) -> (hh:Int, mm:Int, ss:Int, ff:Int) {
         let secondsPerMinute = 60
         let minutesPerHour = 60
         let (secs, ff) = (correctedFrameCount as Int).quotientAndRemainder(dividingBy: fcm.integralFPS)
