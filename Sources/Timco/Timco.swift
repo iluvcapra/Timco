@@ -89,7 +89,7 @@ struct TimecodeRep  {
             return true
         }
         
-        if minutes % 10 != 0 && seconds == 0 && (frames == 1 || frames == 2) {
+        if minutes % 10 != 0 && seconds == 0 && (frames == 0 || frames == 1) {
             return false
         }
 
