@@ -1,6 +1,6 @@
 # Timco
 
-`Timco` converts back and forth between frame counts and the classic SMPTE representation.
+`Timco` converts back and forth between frame counts and the classic SMPTE timecode representation.
 
 ## Example
 
