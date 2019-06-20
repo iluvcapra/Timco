@@ -27,9 +27,16 @@ final class TimcoTests: XCTestCase {
         XCTAssertEqual(r.frames, 2)
         XCTAssertTrue(r.dropFrame)
     }
+    
+    func testStringRep() {
+        let r = TimecodeRep(hours: 4, minutes: 12, seconds: 53, frames: 19, dropFrame: false)
+        XCTAssertEqual(r.description, "04:12:53:19")
+    }
 
     static var allTests = [
         ("testDropType", testDropType),
-        ("testTimecodeRepNonDrop", testTimecodeRepNonDrop)
+        ("testTimecodeRepNonDrop", testTimecodeRepNonDrop),
+        ("testTimecodeRepDrop", testTimecodeRepDrop),
+        ("testStringRep",testStringRep)
     ]
 }

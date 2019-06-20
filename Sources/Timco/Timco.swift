@@ -67,6 +67,5 @@ struct TimecodeRep  {
         return TimecodeRep(hours: hh, minutes: mm, seconds: ss, frames: ff,
                            dropFrame: fcm.dropFrame)
     }
-    
-    
+
 }
