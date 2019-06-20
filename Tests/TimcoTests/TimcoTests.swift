@@ -10,7 +10,7 @@ final class TimcoTests: XCTestCase {
     
     func testTimecodeRepNonDrop() {
         let frameCount = 40
-        let r = TimecodeRep.with(frameCount: frameCount, fcm: .Count24)
+        let r = TimecodeRep.with(frameCount: frameCount, mode: .Count24)
         XCTAssertEqual(r.hours, 0)
         XCTAssertEqual(r.minutes, 0)
         XCTAssertEqual(r.seconds, 1)
@@ -19,7 +19,7 @@ final class TimcoTests: XCTestCase {
     
     func testTimecodeRepDrop() {
         let frameCount = 1830 // 30 * 61
-        let r = TimecodeRep.with(frameCount: frameCount, fcm: .Count30Drop)
+        let r = TimecodeRep.with(frameCount: frameCount, mode: .Count30Drop)
         XCTAssertEqual(r.hours, 0)
         XCTAssertEqual(r.minutes, 1)
         XCTAssertEqual(r.seconds, 1)
@@ -33,11 +33,11 @@ final class TimcoTests: XCTestCase {
     
     func testStringRepToFrameCount() {
         let r1 = TimecodeRep(hours: 0, minutes: 13, seconds: 9, frames: 1, dropMark: false)
-        let frames1 = r1.frameCount(fcm: .Count24)
+        let frames1 = r1.frameCount(mode: .Count24)
         XCTAssertEqual(frames1, 18_937)
         
         let r2 = TimecodeRep(hours: 0, minutes: 1, seconds: 0, frames: 2, dropMark: true)
-        let frames2 = r2.frameCount(fcm: .Count30Drop)
+        let frames2 = r2.frameCount(mode: .Count30Drop)
         XCTAssertEqual(frames2, 1800)
     }
     

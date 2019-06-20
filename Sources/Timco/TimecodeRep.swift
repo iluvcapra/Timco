@@ -72,15 +72,15 @@ struct TimecodeRep  {
      - parameter frameCount: the count of frames. Zero frames is "00:00:00:00"
      - parameter fcm: the frame count mode to use
      */
-    static func with(frameCount: FrameCount, fcm: TimecodeFrameCountMode) -> TimecodeRep {
+    static func with(frameCount: FrameCount, mode: TimecodeFrameCountMode) -> TimecodeRep {
         
         let absoluteFrameCount = abs(frameCount)
-        let dropCorrection : Int = fcm.dropFrame ? dropFrameCount(fcm, absoluteFrameCount) : 0
+        let dropCorrection : Int = mode.dropFrame ? dropFrameCount(mode, absoluteFrameCount) : 0
         let correctedFrameCount : FrameCount = absoluteFrameCount + dropCorrection
-        let (hh, mm, ss, ff) = modulateFrameCount(correctedFrameCount, fcm)
+        let (hh, mm, ss, ff) = modulateFrameCount(correctedFrameCount, mode)
         
         return TimecodeRep(hours: hh, minutes: mm, seconds: ss, frames: ff,
-                           dropMark: fcm.dropFrame)
+                           dropMark: mode.dropFrame)
     }
     
     /**
@@ -123,10 +123,10 @@ struct TimecodeRep  {
      - parameter fcm: The frame count mode to use.
      - returns: The frame count.
      */
-    func frameCount(fcm : TimecodeFrameCountMode) -> FrameCount {
+    func frameCount(mode : TimecodeFrameCountMode) -> FrameCount {
         return TimecodeRep.frameCount(hh: self.hours, mm: self.minutes,
                                       ss: self.seconds, ff: self.frames,
-                                      fcm: fcm)
+                                      fcm: mode)
     }
 }
 
