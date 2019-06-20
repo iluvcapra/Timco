@@ -31,7 +31,6 @@ struct TimecodeRep  {
     let minutes : Int
     let seconds : Int
     let frames : Int
-    let dropFrame : Bool
     
     static func dropFrameCount(_ fcm: TimecodeFrameCountMode, _ absoluteFrameCount: FrameCount) -> FrameCount {
         precondition(fcm.integralFPS == 30)
@@ -62,10 +61,44 @@ struct TimecodeRep  {
         let absoluteFrameCount = abs(frameCount)
         let dropCorrection : Int = fcm.dropFrame ? dropFrameCount(fcm, absoluteFrameCount) : 0
         let correctedFrameCount : FrameCount = absoluteFrameCount + dropCorrection
-        let (hh, mm, ss, ff) : (Int,Int,Int,Int) = modulateFrameCount(correctedFrameCount, fcm)
+        let (hh, mm, ss, ff) = modulateFrameCount(correctedFrameCount, fcm)
         
-        return TimecodeRep(hours: hh, minutes: mm, seconds: ss, frames: ff,
-                           dropFrame: fcm.dropFrame)
+        return TimecodeRep(hours: hh, minutes: mm, seconds: ss, frames: ff)
     }
+    
+    static func frameCount(hh :Int, mm :Int, ss :Int, ff :Int,
+                           fcm :TimecodeFrameCountMode) -> FrameCount {
+        
+        let absoluteFrameCount : FrameCount = {
+            let seconds = [3600 * hh, 60 * mm, ss].reduce(0,+)
+            return seconds * fcm.integralFPS + ff
+        }()
+    
+        let dropCorrection : Int = fcm.dropFrame ? TimecodeRep.dropFrameCount(fcm, absoluteFrameCount) : 0
+        let correctedFrameCount : FrameCount = absoluteFrameCount - dropCorrection
+        return correctedFrameCount
+    }
+    
+    func valid(for fcm : TimecodeFrameCountMode) -> Bool {
+        guard self.hours < 24 && self.minutes < 60 &&
+            self.seconds < 60 && self.frames < fcm.integralFPS else {
+                return false
+        }
+        
+        guard fcm.dropFrame else {
+            return true
+        }
+        
+        if minutes % 10 != 0 && seconds == 0 && (frames == 1 || frames == 2) {
+            return false
+        }
 
+        return true
+    }
+    
+    func frameCount(fcm : TimecodeFrameCountMode) -> FrameCount {
+        return TimecodeRep.frameCount(hh: self.hours, mm: self.minutes,
+                                      ss: self.seconds, ff: self.frames,
+                                      fcm: fcm)
+    }
 }

@@ -10,10 +10,9 @@ import Foundation
 extension TimecodeRep : CustomStringConvertible {
     
     var description : String {
-        let separator = self.dropFrame ? ";" : ":"
-        return String(format: "%02i:%02i:%02i%@%02i",
+        return String(format: "%02i:%02i:%02i:%02i",
                           self.hours, self.minutes,
-                          self.seconds, separator,  self.frames)
+                          self.seconds,  self.frames)
     }
     
 }
