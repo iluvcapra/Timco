@@ -136,9 +136,10 @@ extension TimecodeRep : LosslessStringConvertible {
     /// This will be in the standard form, "hh:mm:ss:ff". The final colon will
     /// be printed as a semicolon if the `dropMark` is `true`.
     var description : String {
-        return String(format: "%02i:%02i:%02i:%02i",
+        let separator = dropMark ? ";" : ":"
+        return String(format: "%02i:%02i:%02i%@%02i",
                       self.hours, self.minutes,
-                      self.seconds,  self.frames)
+                      self.seconds, separator, self.frames)
     }
     
     init?(_ description: String) {
