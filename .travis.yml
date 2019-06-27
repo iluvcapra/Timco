@@ -1,3 +1,4 @@
 osx_image: xcode10.1
 language: swift
 xcode_workspace: .swiftpm/xcode/package.xcworkspace
+xcode_scheme: Timco
